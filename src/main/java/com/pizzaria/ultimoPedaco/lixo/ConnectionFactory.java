@@ -1,4 +1,4 @@
-package com.unip.universidade.lixo;
+package com.pizzaria.ultimoPedaco.lixo;
 
 //import java.io.IOException;
 import java.sql.Connection;
