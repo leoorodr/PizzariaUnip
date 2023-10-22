@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <title>Pizzaria | Último Pedaço</title>
+
+    <script th:inline="javascript">
+        var listaDeProdutos = /*[[${produtos}]]*/ [];
+    </script>
+</head>
+<body>
+    <h1>Cardápio</h1>
+    <table class="table">
+        <thead class="table-primary">
+            <tr>
+                <td>ID</td>
+                <td>Nome</td>
+                <td>Descrição</td>
+                <td>Valor</td>
+                <td>Tipo</td>
+                <td>Selecionar</td>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr th:each="produto : ${listaDeProdutos}">
+                <td th:text="${produto.id}"></td>
+                <td th:text="${produto.nome}"></td>
+                <td th:text="${produto.descricao}"></td>
+                <td th:text="${produto.valor}"></td>
+                <td th:text="${produto.tipo}"></td>
+                <td>
+                    <button th:attr="data-product-id=${produto.id}" class="btn btn-primary add-product">Adicionar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Seu Pedido</h1>
+    <table class="table">
+        <thead class="table-primary">
+            <tr>
+                <td>Nome</td>
+                <td>Valor</td>
+                <td>Remover</td>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider" id="pedido">
+            <!-- Itens do pedido serão adicionados aqui via JavaScript -->
+        </tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    
+    <script>
+        document.querySelectorAll('.add-product').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var productId = button.getAttribute('data-product-id');
+            addProduct(productId);
+            });
+        });
+
+        function addProduct(productId) {
+        // Encontre o produto pelo ID nos produtos disponíveis
+        var produto = findProductById(productId);
+
+        if (produto) {
+            // Adicione o produto ao pedido
+            pedidoItens.push(produto);
+
+            // Atualize a exibição do pedido
+            displayOrder();
+        }
+        }
+
+        function displayOrder() {
+        var pedidoElement = document.getElementById("pedido");
+        pedidoElement.innerHTML = ""; // Limpe a exibição do pedido
+
+        // Adicione os itens do pedido à tabela
+        for (var i = 0; i < pedidoItens.length; i++) {
+            var item = pedidoItens[i];
+
+            var row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${item.nome}</td>
+                <td>${item.valor}</td>
+                <td>
+                    <button onclick="removeProduct(${i})" class="btn btn-danger">Remover</button>
+                </td>
+            `;
+
+            pedidoElement.appendChild(row);
+        }
+        }
+
+
+    </script>
+</body>
+</html>
